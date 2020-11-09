@@ -317,16 +317,16 @@ It will help us understand why the neural network failed sometimes to classify i
 """
 
 nsample = 1000
-X_demo = X_test[:nsample,:]
+X_demo = X_test[:nsample]
 y_demo = ffnn.forward_pass(X_demo)
-y_true = y_test[:nsample,:]
+y_true = y_test[:nsample]
 
 index_to_plot = 50 
 plot_one_image(X_demo, y_true, index_to_plot)
 
 # Compare to the prediction 
 prediction = np.argmax(y_demo[index_to_plot,:])
-true_target = np.argmax(y_true[index_to_plot,:])
+true_target = np.argmax(y_true[index_to_plot])
 
 # is it the same number ? 
 print("True target is ",true_target," and prediction was ", prediction)
@@ -334,10 +334,10 @@ print("True target is ",true_target," and prediction was ", prediction)
 # loop arround the demo test set and try to find a miss prediction
 for i in range(0, nsample):   
     prediction = np.argmax(y_demo[i,:])
-    true_target = np.argmax(y_true[i,:])
+    true_target = np.argmax(y_true[i])
     if prediction != true_target:
       plot_one_image(X_demo, y_true, i)
-      printf("Missed prediction ! True target is ", true_target," and prediction was ", prediction)
+      print("Missed prediction ! True target is ", true_target," and prediction was ", prediction)
       break
 
 
@@ -358,3 +358,4 @@ On remarque qu'en augmentant ces 4 paramètres, notre réseau neuronal obtient d
 L'augmentation du nombre d'epoch permet à notre réseau d'améliorer sa précision car il effectue plus de boucle d'itération.
 L'augmentation du learning rate permet d'améliorer la rapidité de précision du réseau.
 """
+
