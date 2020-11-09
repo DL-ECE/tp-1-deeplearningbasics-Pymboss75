@@ -298,9 +298,9 @@ It's on 12 points because there is a lot of functions to fill but also we want t
 To have all the point your neural network needs to have a Test accuracy > 92 % !!
 """
 
-minibatch_size = 10
+minibatch_size = 20
 nepoch = 10
-learning_rate = 0.01
+learning_rate = 0.03
 
 ffnn = FFNN(config=[784, 35, 35, 10], minibatch_size=minibatch_size, learning_rate=learning_rate)
 
@@ -354,7 +354,7 @@ in the cell below please explain you choice for all the parameters of your confi
 Also explain how the neural network behave when changing them ?
 
 ## Open analysis answer
-J'ai décidé de doubler le nombre d'epoch, d'augmenter le nombre de hidden layers.
-En effet, j'ai remarqué que mon réseaux obtenait de meilleurs résultats en changeant ces paramètres.
+On remarque qu'en augmentant ces 4 paramètres, notre réseau neuronal obtient de meilleur résultats de précision allant jusqu'à 96%.
+L'augmentation du nombre d'epoch permet à notre réseau d'améliorer sa précision car il effectue plus de boucle d'itération.
+L'augmentation du learning rate permet d'améliorer la rapidité de précision du réseau.
 """
-
