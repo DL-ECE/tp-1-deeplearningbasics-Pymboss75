@@ -194,28 +194,27 @@ class FFNN:
             # its shape should be (nlines_prev, nnodes)
             layer.Z = np.zeros([nlines_prev,nnodes])
             # TODO: use the sigmoid activation function
-            layer.activation = sigmoid(layer.Z)
+            layer.activation = sigmoid
             self.layers.append(layer)
         # TODO: Your last layer activation should be a softmax
-        self.layers[-1].activation = softmax(self.layers[-1].Z)
+        self.layers[-1].activation = softmax
         
     def one_step_forward(self, signal: np.array, cur_layer: Layer)-> np.array:
         # Compute the F and Z matrix for the current layer and return Z
         # TODO: Compute the dot product betzeen the signal and the current layer W matrix
-        S = signal.dot(cur_layer.W)
+        S = np.dot(signal,cur_layer.W)
         # TODO: Compute the F matrix of the current layer
-        cur_layer.F = d_sigmoid(S).T
+        cur_layer.F = d_sigmoid(S).transpose()
         # Compute the activation od the current layer
-        cur_layer.Z = sigmoid(S)
-        cur_layer.activation = sigmoid(cur_layer.Z)
+        cur_layer.Z = cur_layer.activation(S)
         return cur_layer.Z
        
     def forward_pass(self, input_data: np.array)-> np.array:
         # TODO: perform the whole forward pass using the on_step_forward function
-
-        for i in range(1, len(self.layers)-1):
-          _ = self.layers[i].Z = self.one_step_forward(self.layers[i-1].Z, self.layers[i])
-        return self.layers[-1].activation
+        self.layers[0].Z = input_data
+        for i in range(1, len(self.layers)):
+          self.layers[i].Z = self.one_step_forward(self.layers[i-1].Z, self.layers[i])
+        return self.layers[-1].Z
     
     def one_step_backward(self, prev_layer: Layer, cur_layer: Layer)-> Layer:
         # TODO: Compute the D matrix of the current layer using the previous layer and return the current layer
@@ -227,8 +226,8 @@ class FFNN:
         self.layers[-1].D = D_out.T
         # TODO: Compute the D matrix for all the layers (excluding the first one which corresponds to the input itself)
         # (you should only use self.layers[1:])
-        for i in reversed(range(1, len(self.layers)-1)):
-          _ = self.one_step_backward(self.layers[i+1], self.layers[i])
+        for i in range(len(self.layers[1:])-1,0,-1):
+          self.one_step_backward(self.layers[i+1], self.layers[i])
         pass
     
     def update_weights(self, cur_layer: Layer, next_layer: Layer)-> Layer:
@@ -240,7 +239,7 @@ class FFNN:
     def update_all_weights(self)-> None:
         # TODO: Update all W matrix using the update_weights function
         for i in range(0, len(self.layers)-1):
-          _ = self.update_weights(self.layers[i], self.layers[i+1])
+          self.update_weights(self.layers[i], self.layers[i+1])
         pass
         
     def get_error(self, y_pred: np.array, y_batch: np.array)-> float:
@@ -300,7 +299,7 @@ To have all the point your neural network needs to have a Test accuracy > 92 % !
 """
 
 minibatch_size = 10
-nepoch = 5
+nepoch = 10
 learning_rate = 0.01
 
 ffnn = FFNN(config=[784, 35, 35, 10], minibatch_size=minibatch_size, learning_rate=learning_rate)
@@ -341,6 +340,8 @@ for i in range(0, nsample):
       printf("Missed prediction ! True target is ", true_target," and prediction was ", prediction)
       break
 
+
+
 """## Open analysis
 
 in the cell below please explain you choice for all the parameters of your configuration: 
@@ -353,7 +354,7 @@ in the cell below please explain you choice for all the parameters of your confi
 Also explain how the neural network behave when changing them ?
 
 ## Open analysis answer
-
-TODO
+J'ai décidé de doubler le nombre d'epoch, d'augmenter le nombre de hidden layers.
+En effet, j'ai remarqué que mon réseaux obtenait de meilleurs résultats en changeant ces paramètres.
 """
 
